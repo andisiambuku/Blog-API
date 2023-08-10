@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserAuthModule } from './user-auth/user-auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
-import { PostsModule } from './posts/posts.module';
+import { AuthModule } from './auth/auth.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -28,8 +27,7 @@ const {
       database: TYPEORM_DATABASE,
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     }),
-    UserAuthModule,
-    PostsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
