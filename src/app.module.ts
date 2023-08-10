@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { BlogpostsModule } from './blogposts/blogposts.module';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
@@ -28,6 +29,7 @@ const {
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
     }),
     AuthModule,
+    BlogpostsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

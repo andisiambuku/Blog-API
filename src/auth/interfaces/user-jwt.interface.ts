@@ -1,4 +1,4 @@
-import { LoginResponseDto } from './dto/loginResponse.dto';
+import { LoginResponseDto } from '../dto/loginResponse.dto';
 
 export interface UserJwtResponse {
   user: LoginResponseDto;

@@ -1,9 +1,9 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { UserService } from './user.service';
-import { SignupDto } from './dto/signup.dto';
-import { User } from './user.entity';
-import { UserJwtResponse } from './user-jwt.interface';
-import { LoginDto } from './dto/login.dto';
+import { UserService } from '../services/user.service';
+import { SignupDto } from '../dto/signup.dto';
+import { User } from '../entities/user.entity';
+import { UserJwtResponse } from '../interfaces/user-jwt.interface';
+import { LoginDto } from '../dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class AuthService {
     }
 
     const payload = { userResult };
-    const accessToken = await this.jwtService.sign(payload);
+    const accessToken = await this.jwtService.sign(payload.userResult);
 
     const signInResponse: UserJwtResponse = { user: userResult, accessToken };
 
