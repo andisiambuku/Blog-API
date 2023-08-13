@@ -82,7 +82,7 @@ export class BlogpostsController {
     if (!blogPost) {
       throw new NotFoundException('The blogpost does not exist!');
     }
-    if (blogPost.user != userId) {
+    if (blogPost.user.id != userId) {
       throw new UnauthorizedException(
         'You are not authorized to delete this template',
       );

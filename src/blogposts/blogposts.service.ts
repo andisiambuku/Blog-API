@@ -12,18 +12,6 @@ export class BlogpostsService {
     private readonly blogpostRepository: Repository<Blogpost>,
   ) {}
 
-  // async create(
-  //   createBlogpostDto: CreateBlogpostDto,
-  //   userId: string,
-  // ): Promise<Blogpost> {
-  //   const blogPost = this.blogpostRepository.create({
-  //     ...createBlogpostDto,
-  //     user: { id: userId },
-  //   });
-
-  //   return this.blogpostRepository.save(blogPost);
-  // }
-
   async create(
     createBlogpostDto: CreateBlogpostDto,
     userId: string,
@@ -41,12 +29,14 @@ export class BlogpostsService {
     });
   }
 
-  async findOneByTitle(title: string): Promise<Blogpost | undefined> {
+  async findOneByTitle(title: string): Promise<Blogpost> {
     return this.blogpostRepository.findOne({ where: { title } });
   }
 
-  findOne(id: string, userId: string): Promise<Blogpost> {
-    return this.blogpostRepository.findOne({ where: { id: userId } });
+  async findOne(id: string, userId: string): Promise<Blogpost> {
+    return this.blogpostRepository.findOne({
+      where: { id, user: { id: userId } },
+    });
   }
 
   async update(
