@@ -12,6 +12,9 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
+  async validateUserById(userId: string) {
+    return await this.userService.findById(userId);
+  }
 
   async signUp(signupDto: SignupDto): Promise<User> {
     return this.userService.create(signupDto);

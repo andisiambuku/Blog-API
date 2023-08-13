@@ -10,13 +10,16 @@ import {
   BadRequestException,
   NotFoundException,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogpostsService } from './blogposts.service';
 import { CreateBlogpostDto } from './dto/create-blogpost.dto';
 import { UpdateBlogpostDto } from './dto/update-blogpost.dto';
 import { Blogpost } from './entities/blogpost.entity';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('blogposts')
+@UseGuards(AuthGuard('jwt'))
 export class BlogpostsController {
   constructor(private readonly blogpostsService: BlogpostsService) {}
 
@@ -25,22 +28,22 @@ export class BlogpostsController {
     @Body() createBlogpostDto: CreateBlogpostDto,
     @Request() req: any,
   ): Promise<Blogpost> {
-    const currentUser = req.user.id;
-    console.log(currentUser);
-    const blogPost = await this.blogpostsService.findOne(
-      createBlogpostDto.body,
+    const userId = req.user.id;
+    const blogPostWithTitle = await this.blogpostsService.findOneByTitle(
       createBlogpostDto.title,
     );
-    if (blogPost) {
-      throw new BadRequestException('Blogpost already exists');
+    if (blogPostWithTitle) {
+      throw new BadRequestException(
+        'Blogpost with the same title already exists',
+      );
     }
-    return this.blogpostsService.create(createBlogpostDto, currentUser);
+    return this.blogpostsService.create(createBlogpostDto, userId);
   }
 
   @Get()
   async findAll(@Request() req: any): Promise<Blogpost[]> {
-    const currentUser = req.user.id;
-    return this.blogpostsService.findAll(currentUser);
+    const userId = req.user.id;
+    return this.blogpostsService.findAll(userId);
   }
 
   @Get(':id')
@@ -48,8 +51,8 @@ export class BlogpostsController {
     @Param('id') id: string,
     @Request() req: any,
   ): Promise<Blogpost> {
-    const currentUser = req.user.id;
-    const blogPost = await this.blogpostsService.findOne(id, currentUser);
+    const userId = req.user.id;
+    const blogPost = await this.blogpostsService.findOne(id, userId);
     if (!blogPost) {
       throw new NotFoundException('This blogpost does not exist');
     }
@@ -62,24 +65,24 @@ export class BlogpostsController {
     @Body() updateBlogpostDto: UpdateBlogpostDto,
     @Request() req: any,
   ): Promise<Blogpost> {
-    const currentUser = req.user.id;
-    const blogPost = await this.blogpostsService.findOne(id, currentUser);
-    if (blogPost.user.id != currentUser) {
+    const userId = req.user.id;
+    const blogPost = await this.blogpostsService.findOne(id, userId);
+    if (blogPost.user.id != userId) {
       throw new UnauthorizedException(
         'You are not authorized to update this template',
       );
     }
-    return this.blogpostsService.update(id, updateBlogpostDto, currentUser);
+    return this.blogpostsService.update(id, updateBlogpostDto, userId);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Request() req: any): Promise<void> {
-    const currentUser = req.user.id;
-    const blogPost = await this.blogpostsService.findOne(id, currentUser);
+    const userId = req.user.id;
+    const blogPost = await this.blogpostsService.findOne(id, userId);
     if (!blogPost) {
       throw new NotFoundException('The blogpost does not exist!');
     }
-    if (blogPost.user.id != currentUser) {
+    if (blogPost.user != userId) {
       throw new UnauthorizedException(
         'You are not authorized to delete this template',
       );

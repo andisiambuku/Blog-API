@@ -12,33 +12,49 @@ export class BlogpostsService {
     private readonly blogpostRepository: Repository<Blogpost>,
   ) {}
 
+  // async create(
+  //   createBlogpostDto: CreateBlogpostDto,
+  //   userId: string,
+  // ): Promise<Blogpost> {
+  //   const blogPost = this.blogpostRepository.create({
+  //     ...createBlogpostDto,
+  //     user: { id: userId },
+  //   });
+
+  //   return this.blogpostRepository.save(blogPost);
+  // }
+
   async create(
     createBlogpostDto: CreateBlogpostDto,
-    currentUser: string,
+    userId: string,
   ): Promise<Blogpost> {
-    const blogPost = await this.blogpostRepository.create({
+    const blogPost = this.blogpostRepository.create({
       ...createBlogpostDto,
-      user: { id: currentUser },
+      user: { id: userId },
     });
     return this.blogpostRepository.save(blogPost);
   }
 
-  findAll(currentUser: string): Promise<Blogpost[]> {
+  findAll(userId: string): Promise<Blogpost[]> {
     return this.blogpostRepository.find({
-      where: { user: { id: currentUser } },
+      where: { user: { id: userId } },
     });
   }
 
-  findOne(id: string, currentUser: string): Promise<Blogpost> {
-    return this.blogpostRepository.findOne({ where: { id: currentUser } });
+  async findOneByTitle(title: string): Promise<Blogpost | undefined> {
+    return this.blogpostRepository.findOne({ where: { title } });
+  }
+
+  findOne(id: string, userId: string): Promise<Blogpost> {
+    return this.blogpostRepository.findOne({ where: { id: userId } });
   }
 
   async update(
     id: string,
     updateBlogpostDto: UpdateBlogpostDto,
-    currentUser: string,
+    userId: string,
   ) {
-    const blogPost = await this.findOne(id, currentUser);
+    const blogPost = await this.findOne(id, userId);
     this.blogpostRepository.merge(blogPost, updateBlogpostDto);
     return this.blogpostRepository.save(blogPost);
   }
