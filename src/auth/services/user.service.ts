@@ -18,25 +18,25 @@ export class UserService {
     return this.userRepository.findOne({ where: { id } });
   }
 
+  private async hashPassword(password: string, salt: string): Promise<string> {
+    return bcrypt.hash(password, salt);
+  }
+
   async create(signupDto: SignupDto): Promise<User> {
     const { email, password, username } = signupDto;
     const user = new User();
 
     user.salt = await bcrypt.genSalt();
-    user.email = email;
     user.password = await this.hashPassword(password, user.salt);
+    user.email = email;
     user.username = username;
 
     try {
       await user.save();
       return user;
     } catch (error) {
-      throw error; // TODO handle error when user already exists
+      throw error;
     }
-  }
-
-  private async hashPassword(password: string, salt: string): Promise<string> {
-    return bcrypt.hash(password, salt);
   }
 
   async signIn(loginDto: LoginDto): Promise<LoginResponseDto> {
