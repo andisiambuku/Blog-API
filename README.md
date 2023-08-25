@@ -21,15 +21,15 @@
 
 # Blog API
 
-This is an API that serves a blog application.
+This is an API that serves a blog frontend.
 
 ## Features
 
 - User Authentication - this is implemented using Passport and JWT.
-- BlogPost - this feature has CRUD endpoints to enamble a user to create, read, update and delete blogposts.
+- BlogPost - this feature has CRUD endpoints to enable a user to create, read, update and delete blogposts.
 
 ## Tutorial
-The tutorial on how to create this is *coming soon*
+The tutorial on how to create the user authentication is available [here](https://andisiambuku.hashnode.dev/user-authentication-with-passport-js-and-jwt-in-nest-js)
 
 ## Installation
 
@@ -51,11 +51,6 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
-
-## Migrations
-
-- Make migration: `npm run typeorm:generate-migration migrations/<name_of_migration>`
-- Run migrations: `npm run typeorm:run-migrations`
 
 ## License
 
